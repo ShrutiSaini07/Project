@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="8dp" >
+
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_700"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="STUDENT ADDER"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/white" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Name"
+            android:background="@color/white"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:id="@+id/eName" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Uid"
+            android:background="@color/white"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:id="@+id/eUid" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="ADD"
+            android:backgroundTint="@color/purple_500"
+            android:id="@+id/btnAdd" />
+
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
