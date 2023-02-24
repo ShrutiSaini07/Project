@@ -18,6 +18,7 @@ public class HomeFrag extends Fragment {
     ArrayList<String> arrSec =new ArrayList<>();
     Adapter_Sec adapter_sec;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

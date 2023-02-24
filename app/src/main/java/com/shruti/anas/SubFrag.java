@@ -14,6 +14,12 @@ import java.util.ArrayList;
 
 public class SubFrag extends Fragment {
 
+    String Sec_Name="";
+
+    public SubFrag(String Sec_Name) {
+        this.Sec_Name = Sec_Name;
+    }
+
     RecyclerView Sub_vRV;
     ArrayList<String> arrSub;
     Adapter_Sub adapter_sub;
@@ -36,7 +42,7 @@ public class SubFrag extends Fragment {
         arrSub.add("Maths");
 
 
-        adapter_sub=new Adapter_Sub(arrSub);
+        adapter_sub=new Adapter_Sub(arrSub,Sec_Name);
         Sub_vRV.setAdapter(adapter_sub);
 
 

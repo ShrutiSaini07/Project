@@ -1,7 +1,11 @@
 package com.shruti.anas;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -19,6 +23,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -27,6 +33,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class StudentsFrag extends Fragment implements View.OnClickListener {
@@ -41,6 +48,10 @@ public class StudentsFrag extends Fragment implements View.OnClickListener {
     String fileName = "720";
     String sheetName = "Science";
 
+    public StudentsFrag(String fileName, String sheetName) {
+        this.fileName = fileName;
+        this.sheetName = sheetName;
+    }
 
     FloatingActionButton Students_fbtn;
     Button Students_btnExcel;
@@ -56,10 +67,16 @@ public class StudentsFrag extends Fragment implements View.OnClickListener {
         Students_btnExcel = view.findViewById(R.id.Students_btnExcel);
         Students_vRV.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        arrStudents = new ArrayList<>();
-        arrStudents.add(new Model_Students("Anas", "21BCS8965"));
-        arrStudents.add(new Model_Students("Shruti", "21BCS9026"));
-        arrStudents.add(new Model_Students("Nikhil", "21BCS8964"));
+
+
+
+        loadRecycler();
+
+
+
+
+
+
 
 
         adapter_students = new Adapter_Students(arrStudents);
@@ -76,19 +93,30 @@ public class StudentsFrag extends Fragment implements View.OnClickListener {
 
         Students_btnExcel.setOnClickListener(this);
 
-        Students_fbtn.setOnClickListener(v -> {
-            StudentAdder();
-        });
+        Students_fbtn.setOnClickListener(this);
 
         return view;
     }
 
 
 
+
     @Override
     public void onClick(View view) {
 
+        switch (view.getId()){
+            case R.id.Students_btnExcel:
+                excel();
+                break;
+            case R.id.Students_fbtn:
+                StudentAdder();
+                break;
+        }
 
+
+    }
+
+    private void excel() {
         filePath = new File(Environment.getExternalStorageDirectory() + "/" + fileName + ".xls");
         if (!filePath.exists()) {
 
@@ -130,11 +158,24 @@ public class StudentsFrag extends Fragment implements View.OnClickListener {
         }
 
 
+
         else {
             try {
                 FileInputStream fileInputStream = new FileInputStream(filePath);
                 HSSFWorkbook hssfWorkbook = new HSSFWorkbook(fileInputStream);
-                HSSFSheet hssfSheet = hssfWorkbook.getSheet(sheetName);
+                HSSFSheet hssfSheet = null;
+                int sheetCount = hssfWorkbook.getNumberOfSheets();
+
+                for (int i=0;i<=sheetCount;i++){
+                    if (hssfWorkbook.getSheetName(i).equals(sheetName)){
+                        hssfSheet = hssfWorkbook.getSheet(sheetName);
+                        break;
+                    }
+                    else {
+                        hssfSheet = hssfWorkbook.createSheet(sheetName);
+                        break;
+                    }
+                }
 
                 int lastRow = hssfSheet.getLastRowNum();
 
@@ -191,6 +232,7 @@ public class StudentsFrag extends Fragment implements View.OnClickListener {
                 adapter_students.notifyItemInserted(arrStudents.size()-1);
                 Students_vRV.scrollToPosition(arrStudents.size()-1);
 
+                save();
                 dialog.dismiss();
             }
         });
@@ -199,4 +241,30 @@ public class StudentsFrag extends Fragment implements View.OnClickListener {
     }
 
 
+
+    private void loadRecycler() {
+
+        SharedPreferences sp = this.getActivity().getSharedPreferences("StudentsFragSP",MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sp.getString("StudentsSP",null);
+        Type type = new TypeToken<ArrayList<Model_Students>>(){}.getType();
+        arrStudents = gson.fromJson(json,type);
+
+        if (arrStudents == null){
+            arrStudents = new ArrayList<>();
+            arrStudents.add(new Model_Students("Anas", "21BCS8965"));
+            arrStudents.add(new Model_Students("Shruti", "21BCS9026"));
+            arrStudents.add(new Model_Students("Nikhil", "21BCS8964"));
+        }
+    }
+
+    private void save(){
+        SharedPreferences sp = this.getActivity().getSharedPreferences("StudentsFragSP",MODE_PRIVATE);
+        SharedPreferences.Editor sp_editor = sp.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(arrStudents);
+        sp_editor.putString("StudentsSP",json);
+        sp_editor.apply();
+        Toast.makeText(getActivity(), "File Saved", Toast.LENGTH_SHORT).show();
+    }
 }

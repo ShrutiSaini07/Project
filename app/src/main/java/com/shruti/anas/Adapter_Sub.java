@@ -16,9 +16,12 @@ import java.util.ArrayList;
 public class Adapter_Sub extends RecyclerView.Adapter<Adapter_Sub.Sub_ViewHolder> {
 
     ArrayList<String> arrSub;
+    String Sec_Name="";
 
-    public Adapter_Sub(ArrayList<String> arrSub) {
+
+    public Adapter_Sub(ArrayList<String> arrSub,String Sec_Name) {
         this.arrSub = arrSub;
+        this.Sec_Name = Sec_Name;
     }
 
     @NonNull
@@ -36,7 +39,7 @@ public class Adapter_Sub extends RecyclerView.Adapter<Adapter_Sub.Sub_ViewHolder
 
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
             activity.getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.layFL, new StudentsFrag())
+                    .replace(R.id.layFL, new StudentsFrag(Sec_Name,arrSub.get(position)))
                     .addToBackStack(null)
                     .commit();
             Toast.makeText(v.getContext(), arrSub.get(position), Toast.LENGTH_SHORT).show();

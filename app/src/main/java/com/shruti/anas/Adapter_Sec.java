@@ -35,7 +35,7 @@ public class Adapter_Sec extends RecyclerView.Adapter<Adapter_Sec.Sec_ViewHolder
         holder.sec_card.setOnClickListener(v -> {
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
             activity.getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.layFL, new SubFrag())
+                    .replace(R.id.layFL, new SubFrag(arrSec.get(position)))
                     .addToBackStack(null)
                     .commit();
             Toast.makeText(v.getContext(), arrSec.get(position), Toast.LENGTH_SHORT).show();
